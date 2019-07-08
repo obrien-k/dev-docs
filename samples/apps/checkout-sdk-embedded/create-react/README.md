@@ -1,4 +1,4 @@
-# Checkout SDK Embedded Checkout - webpack
+# Checkout SDK Embedded Checkout - create react app
 
 This README covers the steps to get the [embedded checkout](https://github.com/bigcommerce/checkout-sdk-js/blob/3a8220bdc3e81f9630954fd88420aded5b9daca3/docs/README.md#embedcheckout) running in an [React](https://reactjs.org/) app with [webpack](https://webpack.js.org/) locally. To read more about using Embedded Checkout see [Add article link here]
 
@@ -16,6 +16,12 @@ To checkout using https://localhost a [Self Signed Certificate](https://en.wikip
 
 3. Replace the `url` in `Checkout.js`[add link in repo to this] with the url to your embedded checkout
 4.  Run `npm start` then visit `https://localhost/checkout`. You may have to use `sudo npm start`.  Anything lower than 1024 is usually a [privileged port](https://www.w3.org/Daemon/User/Installation/PrivilegedPorts.html). 
+
+---
+## CodeSandBox
+[![Edit create-react-embedded-checkout](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/create-react-embedded-checkout-nl2xf?fontsize=14)
+
+*When running on CodeSandbox you may need to run the app in the browser directly. Copy the url provided into your browser instead of the one provided by CodeSandbox.* 
 
 ---
 

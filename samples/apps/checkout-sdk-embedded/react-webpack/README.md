@@ -18,6 +18,12 @@ To checkout using https://localhost a [Self Signed Certificate](https://en.wikip
 4.  Run `npm start` then visit `https://localhost/checkout`. You may have to use `sudo npm start`.  Anything lower than 1024 is usually a [privileged port](https://www.w3.org/Daemon/User/Installation/PrivilegedPorts.html). 
 
 ---
+## CodeSandBox
+[![Edit react-webpack-embedded-checkout](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/react-webpack-embedded-checkout-qucfg?fontsize=14)
+
+*When running on CodeSandbox you may need to run the app in the browser directly. Copy the url provided into your browser instead of the one provided by CodeSandbox.* 
+
+---
 
  ## Resources
  
