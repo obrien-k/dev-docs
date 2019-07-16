@@ -2,7 +2,6 @@
 <div class="otp" id="no-index">
 	<h3> On This Page </h3>
 	<ul>
-        <li><a href="#setting-up-webhooks_intro">Intro</a></li>
     		<li><a href="#setting-up-webhooks_prerequisites">Prerequisites</a></li>
         <li><a href="#setting-up-webhooks_create-project-folder">Create Project Folder</a></li>
         <li><a href="#setting-up-webhooks_install-ngrok">Install ngrok</a></li>
@@ -15,11 +14,17 @@
 	</ul>
 </div>
 
+---
+
 <a href='#setting-up-webhooks_intro' aria-hidden='true' class='block-anchor'  id='setting-up-webhooks_intro'><i aria-hidden='true' class='linkify icon'></i></a>
 
 When testing your application locally, ngrok is a helpful tool for viewing the webhook responses that BigCommerce sends to your app. Ngrok creates a publicly accessible tunnel URL to an application running on your machine's localhost. Ngrok also provides a web interface you can use to view HTTP request details.
 
 In this tutorial, we'll install ngrok, register a webhook on your store, and then observe the response when the webhook event is triggered.
+
+If you would like to follow along, we have created a Postman collection with all the requests. 
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/3f005ed74030e01bbf7a)
 
 <a href='#setting-up-webhooks_prerequisites' aria-hidden='true' class='block-anchor'  id='setting-up-webhooks_prerequisites'><i aria-hidden='true' class='linkify icon'></i></a>
 
@@ -100,7 +105,7 @@ unzip /Users/your-computer/Downloads/ngrok-stable-darwin-amd64.zip -d /Users/you
 <!-- theme: success -->
 
 ### Checkpoint
-> There is no way to re-display this pop-up after selecting Done, so be sure to securely store the credentials before leaving this screen.
+> At this point you should have a project folder with ngrok unzipped inside of it. 
 
 </div>
 </div>
@@ -151,7 +156,12 @@ lineNumbers: true
 <!-- theme: success -->
 
 ### Checkpoint
-> There is no way to re-display this pop-up after selecting Done, so be sure to securely store the credentials before leaving this screen.
+> At this point your project folder should contain:
+* `index.js`
+* `node_modules`
+* `package.json`
+* `ngrok`
+* `package-lock.json`
 
 </div>
 </div>
@@ -207,9 +217,17 @@ From Express [Website](https://expressjs.com/en/starter/basic-routing.html):
 2. In one tab run the app. `node index.js`
 3. In the other start ngrok. `./ngrok http 3000`
 
-<div class="tab-block">
-    {'children': [{'title': 'node index.js', 'blocks': [{'type': 'text', 'data': '```\nBIGCOMMERCE:webhooks your.computer$ node index.js\nListening for webhooks on port 3000\n```'}]}, {'title': 'ngrok http 3000', 'blocks': [{'type': 'image', 'data': '//s3.amazonaws.com/user-content.stoplight.io/6012/1531500085650', 'config': {'centered': True}, 'header': {'title': 'nrgok terminal'}}]}]}
-</div>
+
+#### node index.js
+
+```shell
+BIGCOMMERCE:webhooks your.computer$ node index.js
+Listening for webhooks on port 3000
+```
+
+#### ngrok http 3000
+
+![ngrok running](//s3.amazonaws.com/user-content.stoplight.io/6012/1531500085650)
 
 ngrok returns two values we will need to register a webhook and observe the response: 
 - **Web Interface:** Where you can monitor the hook from a browser. `https://127.0.0.1:4040`
@@ -277,11 +295,9 @@ lineNumbers: true
     X-Auth-Token: {{the OAuth token}}
 ```
 
-4. Check all the values and then hit POST. If successful, the response will be 201 Created.
+4. Check all the values and then send. If successful, the response will be 201 Created.
 
-<a href='#create-a-webhook' aria-hidden='true' class='block-anchor'  id='create-a-webhook'><i aria-hidden='true' class='linkify icon'></i></a>
 
-{'method': 'post', 'url': 'https://api.bigcommerce.com/stores/{store_hash}/v2/hooks', 'headers': {'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Auth-Client': '{the OAuth client id}', 'X-Auth-Token': '{the OAuth token}'}, 'body': '{\n"scope": "store/product/updated",\n "destination": "https://{your-url}.ngrok.io/webhooks",\n "is_active": true\n}\n'}
 
 <a href='#201-response' aria-hidden='true' class='block-anchor'  id='201-response'><i aria-hidden='true' class='linkify icon'></i></a>
 
@@ -387,9 +403,6 @@ lineNumbers: true
 
 After hitting send, check the ngrok web interface. You may see a single event or several based on how many times the product has been updated in the previous step.
 
-<a href='#update-a-product-webhooks' aria-hidden='true' class='block-anchor'  id='update-a-product-webhooks'><i aria-hidden='true' class='linkify icon'></i></a>
-
-{'url': 'https://api.bigcommerce.com/stores/{store_hash}/v3/catalog/products/{product_id}', 'headers': {'X-Auth-Client': '{Your-X-Auth-Client}', 'X-Auth-Token': '{Your-X-Auth-Token}', 'Accept': 'application/json', 'Content-Type': 'application/json'}, 'method': 'put', 'body': '{\n  "price": 12.99\n}'}
 
 <!--
     title: #### ngrok Web Interface
@@ -415,15 +428,12 @@ Want to keep going? Try changing the text in `res.send()` to a custom response, 
 <!-- theme: warning -->
 
 ### URL Timeout
-> There is no way to re-display this pop-up after selecting Done, so be sure to securely store the credentials before leaving this screen.
+> Unless you have a paid ngrok account, the destination URL will only be valid for a few hours. After that, the webhook will stop working. Send a DELETE request to the specific webhook ID to disable the hook. 
 
 </div>
 </div>
 </div>
 
-<a href='#delete-webhook' aria-hidden='true' class='block-anchor'  id='delete-webhook'><i aria-hidden='true' class='linkify icon'></i></a>
-
-{'method': 'delete', 'url': 'https://api.bigcommerce.com/stores/{store_hash}/v2/hooks/{hook_id}', 'headers': {'X-Auth-Client': '{your-client-id}', 'X-Auth-Token': '{your-auth-token}', 'Content-Type': 'application/json', 'Accept': 'application/json'}}
 
 ---
 
@@ -432,19 +442,15 @@ Want to keep going? Try changing the text in `res.send()` to a custom response, 
 ## Adding Custom Headers
 For added security you can add custom headers to your webhook request. `headers` accepts any key:value pair as a string. 
 
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Example Webhook Custom Headers</div>
-    </div><div class="HubBlock-header-subtitle"></div>
-</div>
-
 <!--
 title: "Example Webhook Custom Headers"
 subtitle: ""
 lineNumbers: true
 -->
 
-```
+**Example Webhook Custom Headers**
+
+```json
 {
 "scope": "store/cart/lineItem/*",
   "destination": "https://myapp.herokuapp.com/",
@@ -462,7 +468,8 @@ lineNumbers: true
 <a href='#setting-up-webhooks_troubleshooting' aria-hidden='true' class='block-anchor'  id='setting-up-webhooks_troubleshooting'><i aria-hidden='true' class='linkify icon'></i></a>
 
 ## Troubleshooting
-1. Getting a 404 error using the root (/) url?
+
+**Getting a 404 error using the root (/) url?**
 
 Add this snippet to your code to respond to incoming get requests with 'hello':
 
@@ -484,12 +491,20 @@ app.get('/',(req, res)=>{
 }); 
 ```
 
-2. Getting error ngrok not found?
+**Getting error ngrok not found?**
+
 There are two ways to fix this. Your local setup will determine which command will work.
 Use the command `mv ngrok /usr/local/bin `to move ngrok to your local bin folder. This way it becomes available globally. 
 Use the command `./ngrok http 3000` to run ngrok as a sudo user. 
 
-3. Windows Users
+<br>
+
+**Windows Users**
+
 If you are having trouble getting ngrok started try setting the PATH. 
     - [What are PATH and other environment variables, and how can I set or use them?](https://superuser.com/questions/284342/what-are-path-and-other-environment-variables-and-how-can-i-set-or-use-them)
 
+## Resources
+* [Webhooks Overview](https://developer.bigcommerce.com/api-docs/getting-started/webhooks/about-webhooks)
+* [Webhook Events](https://developer.bigcommerce.com/api-docs/getting-started/webhooks/webhook-events)
+* [Webhooks Reference](https://developer.bigcommerce.com/api-reference/webhooks)

@@ -2,16 +2,15 @@
 <div class="otp" id="no-index">
 	<h3> On This Page </h3>
 	<ul>
-       <li><a href="#payments_pci-compliance">PCI Compliance</a></li>
-        <li><a href="#payments_processing-payment">Processing a Payment</a></li>
-        <li><a href="#payments_stored-cards">Stored Cards</a></li>
-        <li><a href="#payments_credit-cards">Credit Cards</a></li>
+    <li><a href="#payments_pci-compliance">PCI Compliance</a></li>
+    <li><a href="#payments_processing-payment">Processing a Payment</a></li>
+    <li><a href="#payments_stored-cards">Stored Cards</a></li>
+    <li><a href="#payments_credit-cards">Credit Cards</a></li>
     <li><a href="#payments_orders-api">Orders API</a></li>
-    		<li><a href="#payments_technical-details">Technical Details</a></li>
-        <li><a href="#payments_sample-app-diagram">Sample App Diagram</a></li>
-    		<li><a href="#payments_error-codes">Error Codes</a></li>
-        <li><a href="#payments_faq">FAQ</a></li>
-    
+    <li><a href="#payments_technical-details">Technical Details</a></li>
+    <li><a href="#payments_sample-app-diagram">Sample App Diagram</a></li>
+    <li><a href="#payments_error-codes">Error Codes</a></li>
+    <li><a href="#payments_faq">FAQ</a></li>
 	</ul>
 </div>
 
@@ -27,6 +26,9 @@ The following [OAuth](/api-docs/getting-started/authentication#authentication_oa
 * Create Payments
 * Get Payment Methods
 
+To follow along, we have created a Postman Collection.
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/38daa68bda00ba9d4734)
 ---
 
 <a href='#payments_pci-compliance' aria-hidden='true' class='block-anchor'  id='payments_pci-compliance'><i aria-hidden='true' class='linkify icon'></i></a>
@@ -41,8 +43,9 @@ Merchants or shoppers personal identifiable information (PII) collected by recur
 <div class="HubBlock-content">
     
 <!-- theme: warning -->
-
-> There is no way to re-display this pop-up after selecting Done, so be sure to securely store the credentials before leaving this screen.
+### PCI Compliance
+> If your application handles credit card data, you will need to be PCI Compliant. SAQs (self-assessment questionnaires) can be submitted to 
+<a href="mailto:compliance@bigcommerce.com">compliance@bigcommerce.com</a>.
 
 </div>
 </div>
@@ -91,12 +94,12 @@ Payments can be processed using cards stored with the BigCommerce Stored Credit 
 * Paymetric
 
 <div class="HubBlock--callout">
-<div class="CalloutBlock--">
+<div class="CalloutBlock--info">
 <div class="HubBlock-content">
     
 <!-- theme:  -->
-
-> There is no way to re-display this pop-up after selecting Done, so be sure to securely store the credentials before leaving this screen.
+### Hosted Providers
+> The API flow does not currently support hosted/offsite providers such as PayPal and Adyen and wallet type payments such as Amazon Pay.
 
 </div>
 </div>
@@ -125,19 +128,16 @@ To use stored cards with the Payments API or the Checkout SDK make sure stored c
 
 This token is the same as `payment_instrument_token` from [Get Transactions](https://developer.bigcommerce.com/api-reference/orders/orders-transactions-api).
 
-{'method': 'get', 'url': 'https://api.bigcommerce.com/stores/{store_hash}/v3/payments/methods', 'query': {'order_id': ''}, 'headers': {'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Auth-Client': '{$$.env.X-Auth-Client}', 'X-Auth-Token': '{$$.env.X-Auth-Token}'}}
-
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Response</div>
-    </div><div class="HubBlock-header-subtitle">Get Payment Methods</div>
-</div>
+<br>
 
 <!--
 title: "Sample Response"
 subtitle: "Get Payment Methods"
 lineNumbers: true
 -->
+
+**Example Response Get Payment Methods**  
+`/GET https://api.bigcommerce.com/stores/{{store_hash}}/v3/payments/methods?{{order_id}}`
 
 ```json
 {
@@ -195,16 +195,10 @@ lineNumbers: true
 }
 ```
 
-On line 46 is the `token`. Make note of the token to use as part of processing the payment in the request body.
+Make note of the `token` to use as part of processing the payment in the request body.
 
 ### Create Access Token
 2. Make a request to [Create Access Token](/api-reference/payments/payments-create-payment-token-api/payment-access-token/paymentsaccesstokenspost) to get the authorization token that needs to be passed in the header when processing the payment. The ID of the order needs to be part of the request body.
-
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Request</div>
-    </div><div class="HubBlock-header-subtitle">Create Payment Access Token</div>
-</div>
 
 <!--
 title: "Sample Request"
@@ -212,7 +206,10 @@ subtitle: "Create Payment Access Token"
 lineNumbers: true
 -->
 
-```
+**Example Request Create Payment Access Token**  
+`/POST https://api.bigcommerce.com/stores/{{store_hash}}/v3/payments/access_tokens`
+
+```json
 {
   "order": {
     "id": 215
@@ -220,19 +217,14 @@ lineNumbers: true
 }
 ```
 
-{'url': 'https://api.bigcommerce.com/stores/{store_hash}/v3/payments/access_tokens', 'method': 'post', 'body': '{\n  "order": {\n    "id": your-order-id\n  }\n}', 'headers': {'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Auth-Client': '{$$.env.X-Auth-Client}', 'X-Auth-Token': '{$$.env.X-Auth-Token}'}}
-
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Response</div>
-    </div><div class="HubBlock-header-subtitle">Create Payment Access Token</div>
-</div>
 
 <!--
 title: "Sample Response"
 subtitle: "Create Payment Access Token"
 lineNumbers: true
 -->
+
+**Example Response Create Payment Access Token**
 
 ```json
 {
@@ -265,17 +257,13 @@ The headers to process a payment are different than the headers you normally sen
     
 <!-- theme: warning -->
 
-> There is no way to re-display this pop-up after selecting Done, so be sure to securely store the credentials before leaving this screen.
+### PAT
+> There is a space between PAT {your-access-token}.
 
 </div>
 </div>
 </div>
 
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Request</div>
-    </div><div class="HubBlock-header-subtitle">Process Payment</div>
-</div>
 
 <!--
 title: "Sample Request"
@@ -283,7 +271,10 @@ subtitle: "Process Payment"
 lineNumbers: true
 -->
 
-```shell
+**Example Request Process Payment**  
+`/POST https://payments.bigcommerce.com/stores/{store_hash}/payments`
+
+```curl
 curl -X POST \
   https://payments.bigcommerce.com/stores/{store_hash}/payments \
   -H 'Accept: application/vnd.bc.v1+json' \
@@ -302,17 +293,13 @@ curl -X POST \
 
 ```
 
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Response</div>
-    </div><div class="HubBlock-header-subtitle">Process Payment</div>
-</div>
-
 <!--
 title: "Sample Response"
 subtitle: "Process Payment"
 lineNumbers: true
 -->
+
+**Example Response Process Payment**
 
 ```json
 {
@@ -324,9 +311,7 @@ lineNumbers: true
 }
 ```
 
-{'url': 'https://payments.bigcommerce.com/stores/{store_hash}/payments', 'method': 'post', 'body': '{\n  "payment": {\n    "instrument": {\n      "type": "stored_card",\n      "token": "{your-access-token}",\n      "verification_value": "{verification value}"\n    },\n    "payment_method_id": "{payment-method}.card"\n  }\n}', 'headers': {'Authorization': '{$$.env.Authorization}', 'Accept': 'application/vnd.bc.v1+json', 'Content-Type': 'application/json'}}
-
-If the purchase was successful it will return a status of success.  The order is then automatically moved to an Awaiting Fulfillment status. If you get a different response, see [Error Codes](#payments_error-codes) for troubleshooting.
+If the purchase was successful it will return a status of success. The order is then automatically moved to an Awaiting Fulfillment status. If you get a different response, see [Error Codes](#payments_error-codes) for troubleshooting.
 
 ---
 
@@ -342,17 +327,14 @@ There are two steps to using a credit card to make a payment.
 ### Create Access Token
 1. Make a request to [Create Access Token](/api-reference/payments/payments-create-payment-token-api/payment-access-token/paymentsaccesstokenspost) to to get the authorization token that needs to be passed in the header when processing the payment. The ID of the order needs to be part of the request body.
 
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Request</div>
-    </div><div class="HubBlock-header-subtitle">Create Payment Access Token</div>
-</div>
-
 <!--
 title: "Sample Request"
 subtitle: "Create Payment Access Token"
 lineNumbers: true
 -->
+
+**Example Request Create Payment Access Token**  
+`/POST https://api.bigcommerce.com/stores/{{store_hash}}/v3/payments/access_tokens`
 
 ```json
 {
@@ -362,19 +344,15 @@ lineNumbers: true
 }
 ```
 
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Response</div>
-    </div><div class="HubBlock-header-subtitle">Create Payment Access Token</div>
-</div>
-
 <!--
 title: "Sample Response"
 subtitle: "Create Payment Access Token"
 lineNumbers: true
 -->
 
-```
+**Example Response Create Payment Access Token**
+
+```json
 {
   "data": {
     "id": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTEzOTQxNDIsIm5iZiI6MTU1MTM5MDU0MiwiaXNzIjoicGF5bWVudHMuYmlnY29tbWVyY2UuY29tIiwic3ViIjoianJhaDZnbW4iLCJqdGkiOiI3Nzg3ZmU1Zi01OWJmLTQ3ZWMtYTFmZC00ZDQ3ZTkwNjFlNWMiLCJpYXd4gJ8uHDk3kDhhuyefsrtr45mRhdGEiOnsic3RvcmVfaWQiOjEwMjU2NDYsIm9yZGVyX2lkIjoyMTUsImFtb3VudCI6OTgwMCwiY3VycmVuY3kiOiJVU0QifX0.WbR90d8m4gn8wK7kPMDEoVq8B0hHC5Ul5H4Hpqq6Yvo"
@@ -382,8 +360,6 @@ lineNumbers: true
   "meta": {}
 }
 ```
-
-{'url': 'https://api.bigcommerce.com/stores/{store_hash}/v3/payments/access_tokens', 'method': 'post', 'body': '{\n  "order": {\n    "id": your-order-id\n  }\n}', 'headers': {'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Auth-Client': '{$$.env.X-Auth-Client}', 'X-Auth-Token': '{$$.env.X-Auth-Token}'}}
 
 ### Process the Payment
 
@@ -413,16 +389,11 @@ If any of these fields are incorrect, the payment might be rejected.
     
 <!-- theme: warning -->
 
-> There is no way to re-display this pop-up after selecting Done, so be sure to securely store the credentials before leaving this screen.
+### PAT
+> There is a space between PAT {your-access-token}.
 
 </div>
 </div>
-</div>
-
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Request</div>
-    </div><div class="HubBlock-header-subtitle">Process Payment</div>
 </div>
 
 <!--
@@ -431,7 +402,10 @@ subtitle: "Process Payment"
 lineNumbers: true
 -->
 
-```
+**Example Request Process Payment**  
+`/POST https://payments.bigcommerce.com/stores/{store_hash}/payments`
+
+```curl
 curl -X POST \
   https://payments.bigcommerce.com/stores/{store_hash}/payments \
   -H 'Accept: application/vnd.bc.v1+json' \
@@ -452,19 +426,15 @@ curl -X POST \
 }'
 ```
 
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Response</div>
-    </div><div class="HubBlock-header-subtitle">Process Payment</div>
-</div>
-
 <!--
 title: "Sample Response"
 subtitle: "Process Payment"
 lineNumbers: true
 -->
 
-```
+**Example Response Process Payment**
+
+```json
 {
   "data": {
     "id": "693bb4cd-3f20-444a-8315-6369f582c68a",
@@ -474,9 +444,7 @@ lineNumbers: true
 }
 ```
 
-{'url': 'https://payments.bigcommerce.com/stores/{store_hash}/payments', 'method': 'post', 'body': '{\n  "payment": {\n    "instrument": {\n      "type": "card",\n      "number": "{card-number}",\n      "cardholder_name": "{cardholder-name}",\n      "expiry_month": expiration-month-two-digit,\n      "expiry_year": expiration-year-four-digit,\n      "verification_value": "{verification-value-cvv}"\n    },\n    "payment_method_id": "{payment-provider}.card"\n  }\n}', 'headers': {'Authorization': '{$$.env.Authorization}', 'Accept': 'application/vnd.bc.v1+json', 'Content-Type': 'application/json'}}
-
-If the purchase was successful it will return a status of success.  The order is then automatically moved to an Awaiting Fulfillment status. If you get a different response, see [Error Codes](#payments_error-codes) for troubleshooting.
+If the purchase was successful it will return a status of success. The order is then automatically moved to an Awaiting Fulfillment status. If you get a different response, see [Error Codes](#payments_error-codes) for troubleshooting.
 
 ---
 
@@ -484,21 +452,18 @@ If the purchase was successful it will return a status of success.  The order is
 
 ## Using the Orders API
 
-It is possible to take a payment for an order created using the [Orders API](orders/orders-api-overview). When creating the order using the Orders API make sure the `status_id:0`. If the order status is not created with the status set to `0` or `Incomplete`, the Payments API will return an [error](#payments_error-codes).
+It is possible to take a payment for an order created using the [Orders API](https://developer.bigcommerce.com/api-docs/orders/orders-api-overview). When creating the order using the Orders API make sure the `status_id:0`. If the order status is not created with the status set to `0` or `Incomplete`, the Payments API will return an [error](#payments_error-codes).
 The billing address and line items should be filled in when creating the order. The order can be created as a guest order by either seeting the 
 `customer_id:0`or leaving it blank. After the order is created, then follow the steps for either a [credit card](#payments_credit-cards) or a [stored card](#payments_stored-cards).
-
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Example Create Order</div>
-    </div><div class="HubBlock-header-subtitle"></div>
-</div>
 
 <!--
 title: "Example Create Order"
 subtitle: ""
 lineNumbers: true
 -->
+
+**Example Create an Order**  
+`/POST https://api.bigcommerce.com/stores/{store_hash}/v2/orders` 
 
 ```json
 {
@@ -612,128 +577,24 @@ Orders can be created using the [Server to Server API Endpoints](https://develop
 
 ## Error Codes
 
-### 10000
-An internal error has occurred within the API.
-
-**Possible Causes**
-- Connection error
-
-**Possible Solutions**
-* Try the request again.
-
-### 10001
-Missing or incorrect required fields.
-
-**Possible Causes** 
-* Missing or Incorrect Fields.
-
-**Possible Solutions**  
-* Check the request for any data that is incorrect or is missing
-
-### 30000
-Merchant payment configuration could not be found.
-
-**Possible Causes**  
-* The payment provider has not been configured in the store.
-
-**Possible Solutions**  
-* Check the [payment gateways](https://support.bigcommerce.com/s/article/Online-Payment-Methods#setup) settings in your BigCommerce store. 
-
-### 30001
-Merchant payment configuration is not correctly being configured.
-
-**Possible Causes**
-* The payment configuration is being rejected by the payment gateway.
-
-**Possible Solutions**
-- Check the [payment gateways](https://support.bigcommerce.com/s/article/Online-Payment-Methods#setup) settings in your BigCommerce store. 
-- Reach out the the payment gateway to check the information is correct.
-
-### 30002
-Vaulting service is currently not available.
-
-**Possible Causes**  
-* The vaulting feature is not enabled on this store.
-
-**Possible Solutions**  
-* Reach out to the store owner to enable [Stored Credit Cards](https://support.bigcommerce.com/s/article/Enabling-Stored-Credit-Cards). 
-
-### 30003
-Order could not be found.
-
-**Possible Causes**
-- The order does not exist.
-- The order ID is not correct.
-
-**Possible Solutions**  
-* Check the current orders in the store using [Get All Orders](https://developer.bigcommerce.com/api-reference/orders/orders-api/orders/getorders).
-
-
-### 30004
-The validation on line item and grand total does not match. 
-
-**Possible Solutions**
-* Recreate the payment access token
-* Recreate the order
-* Ensure the store settings for taxes and discounts are setup correctly. 
-
-
-### 30050
-Payment instrument could not be saved.
-
-**Possible Causes**  
-* Credit card information is incorrect.
-
-**Possible Solutions**
-* Check that the card information is correct.
-	* `expiry_month` is two digits
-	* `expiry_year` is four digits
-
-### 30051
-The stored card was not found.
-
-**Possible Causes**  
-* The card requested for payment is not associated to the shopper.
-
-**Possible Solutions**  
-* Use [Get Payment Methods](/api-reference/payments/payments-create-payment-token-api/payment-methods/paymentsmethodsget) to see available vaulted cards.
-
-### 30100
-Payment access token could not be created.
-
-
-### 30101
-Order is invalid.
-
-**Possible Causes**  
-* The order is in the wrong status.
-
-**Possible Solutions**
- - Orders must be in Incomplete Status with a `status_id:0`.
- - The order must be created by the Checkout SDK, Checkout API or V2 Orders API. Orders created in the Control and set to an incomplete status will return this error. 
-
-### 30102
-The payment was declined.
-
-**Possible Causes**
-- The card information provided was incorrect
-- The token provided was incorrect
-
-**Possible Solutions**
-- Check that the provider shopper information is correct
-- Make sure the token in the Authorization header field is correct
-
-### 30103
-Card has expired
-
-### 30104
-The payment was declined. Please contact card issuer for more information.
-
-### 30105
-The payment was declined due to duplicate payment being submitted.
-
-### 30106
-The payment was declined due to insufficient funds.
+| Code | Description | Possible Causes | Possible Solutions |
+| ---   | ---  |  ---- |  ---- |
+| `10000` |  An internal error has occurred within the API. |  Connection error | Try the request again. |
+| `10001` | Missing or incorrect required fields. | Missing or Incorrect Fields |  Check the request for any data that is incorrect or is missing |
+| `30000` | Merchant payment configuration could not be found. | * The payment provider has not been configured in the store. | Check the [payment gateways](https://support.bigcommerce.com/s/article/Online-Payment-Methods#setup) settings in your BigCommerce store. |
+| `3001` | Merchant payment configuration is not correctly being configured. | The payment configuration is being rejected by the payment gateway. | Check the [payment gateways](https://support.bigcommerce.com/s/article/Online-Payment-Methods#setup) settings in your BigCommerce store. <br> Reach out the the payment gateway to check the information is correct. | 
+| `30002` | Vaulting service is currently not available. |  The vaulting feature is not enabled on this store. | Reach out to the store owner to enable [Stored Credit Cards](https://support.bigcommerce.com/s/article/Enabling-Stored-Credit-Cards) |
+| `30003` | Order could not be found. | The order does not exist. <br> The order ID is not correct. |  Check the current orders in the store using [Get All Orders](https://developer.bigcommerce.com/api-reference/orders/orders-api/orders/getorders) |
+| `30004` | The validation on line item and grand total does not match. | N/A| Recreate the payment access token <br> Recreate the order <br> Ensure the store settings for taxes and discounts are setup correctly| 
+| `30050` | Payment instrument could not be saved. | Credit card information is incorrect. | Check that the card information is correct.<br> * `expiry_month` is two digits<br>* `expiry_year` is four digits |
+| `30051` | The stored card was not found. |  The card requested for payment is not associated to the shopper.| Use [Get Payment Methods](/api-reference/payments/payments-create-payment-token-api/payment-methods/paymentsmethodsget) to see available vaulted cards |
+|`30100` | Payment access token could not be created. | N/A|N/A|
+| `30101` | Order is invalid. | The order is in the wrong status. | Orders must be in Incomplete Status with a `status_id:0` <br>  The order must be created by the Checkout SDK, Checkout API or V2 Orders API. Orders created in the Control and set to an incomplete status will return this error. | 
+| `30102` | The payment was declined. | The card information provided was incorrect<br>The token provided was incorrect | Check that the provider shopper information is correct<br>Make sure the token in the Authorization header field is correct |
+| `30103` | Card has expired |N/A | N/A|
+| `30104` | The payment was declined. Please contact card issuer for more information. |N/A |N/A|
+| `30105` | The payment was declined due to duplicate payment being submitted. |N/A |N/A |
+| `30106` | The payment was declined due to insufficient funds. |N/A |N/A|
 
 ---
 
@@ -771,15 +632,15 @@ Store credit is not a supported payment method with the Payments API. Store cred
 
 **Are gift certificates supported?**
 
-Gift certificates are not supported with the Payments API. Gift certificates can still be used by the 
+Gift certificates are not supported with the Payments API. Gift certificates can still be used by the shopper on the storefront, part of the control panel or with the Checkout API.
 
+---
 
 ## Resources
 
 ### Webhooks
-There are no specific webhooks for payments. 
 
-**Related Webhooks:**
+- [Customer Payment Instrument](https://developer.bigcommerce.com/api-docs/getting-started/webhooks/webhook-events#webhook-events_customer)
 - [Orders](https://developer.bigcommerce.com/api-docs/getting-started/webhooks/webhook-events#webhook-events_orders)
 - [Cart](https://developer.bigcommerce.com/api-docs/getting-started/webhooks/webhook-events#webhook-events_cart)
 

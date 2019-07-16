@@ -2,16 +2,17 @@
 <div class="otp" id="no-index">
 	<h3> On This Page </h3>
 	<ul>
+	  <li><a href="#widget-tutorial_prerequisites">Prerequisites</a></li>
         <li><a href="#widget-tutorial_add-a-region">Add a Region</a></li>
         <li><a href="#widget-tutorial_create-widget-template">Create a Widget Template</a></li>
         <li><a href="#widget-tutorial_create-widget">Create a Widget</a></li>
         <li><a href="#widget-tutorial_create-placement">Create the Placement</a></li>
         <li><a href="#widget-tutorial_create-layout">Create the Layout</a></li>
     		<li><a href="#widget-tutorial_reuse-widget-template">Reuse the Widget</a></li>
-        <li><a href="#widget-tutorial_resources">Resources</a></li>
-    <li><a href="#widget-tutorial_next-steps">Next Steps</a></li>
 	</ul>
 </div>
+
+---
 
 In this tutorial, we will cover:
 * Creating a Region
@@ -20,27 +21,35 @@ In this tutorial, we will cover:
 * Placing the Widget
 * Creating the Layout
 
-This tutorial assumes knowlege of [Widgets](/api-docs/storefront/widgets/widgets-overview). 
+This tutorial assumes knowledge of [Widgets](/api-docs/storefront/widgets/widgets-overview). 
 
 <div class="HubBlock--callout">
-<div class="CalloutBlock--">
+<div class="CalloutBlock--info">
 <div class="HubBlock-content">
     
 <!-- theme:  -->
+### Cornerstone Theme
+> The instructions below use the Cornerstone Theme. Your theme may differ.
 
-> There is no way to re-display this pop-up after selecting Done, so be sure to securely store the credentials before leaving this screen.
 
 </div>
 </div>
 </div>
 
-## Prerequisites:
+---
+<a id="widget-tutorial_prerequisites"></a>
+
+##  Prerequisites:
 * Stencil Theme. This tutorial uses Cornerstone.
 * Scopes  
 The following Oauth scopes are required:
 	* [Content](/api-docs/getting-started/authentication#authentication_oauth-scopes) set to Modify
 * Image URL. If you don’t have one, there is an example in the tutorial.
 * Category Page ID. A [GET Categories](/api-reference/catalog/catalog-api/category/getcategories) request will returns a list of category IDs.
+
+To follow along we have created a Postman collection.
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/068117f7cbf510527e49)
 
 We will be making a widget that shows three images, with a hover effect and each image linking out to a different location. 
 
@@ -50,7 +59,6 @@ We will be making a widget that shows three images, with a hover effect and each
     data: //s3.amazonaws.com/user-content.stoplight.io/6012/1551898706416
 -->
 
-#### Category Page Widget
 ![#### Category Page Widget
 ](//s3.amazonaws.com/user-content.stoplight.io/6012/1551898706416 "#### Category Page Widget
 ")
@@ -68,7 +76,6 @@ Add `{{{region name="category_header_banner"}}}` to <span class=”fp”>pages/c
     data: //s3.amazonaws.com/user-content.stoplight.io/6012/1551898921184
 -->
 
-#### Add Region to category.html
 ![#### Add Region to category.html
 ](//s3.amazonaws.com/user-content.stoplight.io/6012/1551898921184 "#### Add Region to category.html
 ")
@@ -78,8 +85,8 @@ Add `{{{region name="category_header_banner"}}}` to <span class=”fp”>pages/c
 <div class="HubBlock-content">
     
 <!-- theme: info -->
-
-> There is no way to re-display this pop-up after selecting Done, so be sure to securely store the credentials before leaving this screen.
+### Regions
+> Regions can only be added to files under pages/templates, including subfolders.
 
 </div>
 </div>
@@ -87,13 +94,10 @@ Add `{{{region name="category_header_banner"}}}` to <span class=”fp”>pages/c
 
 To check the region was added successfully, use [Get Content Regions](/api-reference/storefront/widgets-api/regions/getcontentregions).
 
-{'url': 'https://api.bigcommerce.com/stores/{store_hash}/v3/content/regions', 'method': 'get', 'headers': {'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Auth-Client': '{$$.env.X-Auth-Client}', 'X-Auth-Token': '{$$.env.X-Auth-Token}'}, 'query': {'templateFile': 'pages/category'}}
 
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Response</div>
-    </div><div class="HubBlock-header-subtitle">Get Content Regions</div>
-</div>
+**Example Response Get Content Regions**  
+`/GET https://developer.bigcommerce.com/api-reference/storefront/widgets-api/regions/getcontentregions`
+
 
 <!--
 title: "Sample Response"
@@ -129,19 +133,26 @@ Widget Templates are the reusable piece of structure. In this walkthrough we are
 
 In the response the Widget Template UUID returned. Make note of it for use later when creating the Widget.
 
-{'method': 'post', 'body': '{\n\t"name": "Header Images",\n\t"template": "{{#each images}}<a href=\'{{image_url}}\'><img src={{image_source}} style=\'width:33.3%\'/></a>{{/each}}"\n}', 'url': 'https://api.bigcommerce.com/stores/{store_hash}/v3/content/widget-templates', 'headers': {'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Auth-Client': '{$$.env.X-Auth-Client}', 'X-Auth-Token': '{$$.env.X-Auth-Token}'}}
+**Example Create Widget Template**  
+`/POST https://api.bigcommerce.com/stores/{{store_hash}}/v3/content/widget-templates`
 
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Response </div>
-    </div><div class="HubBlock-header-subtitle">Create Widget Template</div>
-</div>
+```json
+{
+  "name": "Header Images",
+  "template": "{{#each images}}<a href='{{image_url}}'><img src={{image_source}} style='width:33.3%'/></a>{{/each}}"
+}
+```
+
 
 <!--
 title: "Sample Response "
 subtitle: "Create Widget Template"
 lineNumbers: true
 -->
+
+**Example Response Create Widget Template**  
+`/POST https://api.bigcommerce.com/stores/{{store_hash}}/v3/content/widget-templates`
+
 
 ```json
 {
@@ -176,19 +187,14 @@ For widget_configuration `images is the top level array, with `image_url` and `i
 
 In the response the Widget UUID is returned. Make note of it for use later when creating the Placement.
 
-{'method': 'post', 'body': '{\n  "name": "Header Images",\n  "widget_configuration": {\n    "images": [\n      {\n        "image_url": "{where-the-image-should-link-to}",\n        "image_source": "https://cdn11.bigcommerce.com/s-n0i50vy/images/stencil/1280x1280/products/91/309/thekinfolktablecover_1024x1024__80715.1456436719.jpg?c=2&imbypass=on"\n      },\n      {\n        "image_url": "{where-the-image-should-link-to}",\n        "image_source": "https://cdn11.bigcommerce.com/s-n0i50vy/images/stencil/1280x1280/products/109/361/kinfolkessentialissue_1024x1024__22507.1456436715.jpg?c=2&imbypass=on"\n      },\n      {\n        "image_url": "{where-the-image-should-link-to}",\n        "image_source": "https://cdn11.bigcommerce.com/s-n0i50vy/images/stencil/500x659/products/85/282/livingwithplants_grande__26452.1456436666.jpg?c=2&imbypass=on"\n      }\n    ]\n  },\n  "widget_template_uuid": "{your-widget-template-uuid}"\n}', 'url': 'https://api.bigcommerce.com/stores/{store_hash}/v3/content/widgets', 'headers': {'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Auth-Client': '{$$.env.X-Auth-Client}', 'X-Auth-Token': '{$$.env.X-Auth-Token}'}}
-
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Response</div>
-    </div><div class="HubBlock-header-subtitle">Create a Widget</div>
-</div>
-
 <!--
 title: "Sample Response"
 subtitle: "Create a Widget"
 lineNumbers: true
 -->
+
+**Example Create a Widget**  
+`/POST https://api.bigcommerce.com/stores/{{store_hash}}/v3/content/widgets`
 
 ```json
 {
@@ -249,25 +255,46 @@ Placement defines the page and region where the widget should appear. Remember t
 
 If you wanted to see the results of the Widget without a layout, use the Placement without the layout code sample below. If you would like to learn more about Layouts use the Create Placement code sample below. 
 
-{'method': 'post', 'body': '{\n  "widget_uuid": "{your-widget-uuid}",\n  "entity_id": "{your-category-id}",\n  "sort_order": 1,\n  "region": "category_header_banner",\n  "template_file": "pages/category",\n  "status": "active"\n}', 'url': 'https://api.bigcommerce.com/stores/{store_hash}/v3/content/placements', 'headers': {'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Auth-Client': '{$$.env.X-Auth-Client}', 'X-Auth-Token': '{$$.env.X-Auth-Token}'}}
+**Example Create a Placement Without a Layout**  
+`/POST https://api.bigcommerce.com/stores/{{store_hash}}/v3/content/placements`
+
+```json
+{
+  "widget_uuid": "{your-widget-uuid}",
+  "entity_id": "{your-category-id}",
+  "sort_order": 1,
+  "region": "category_header_banner",
+  "template_file": "pages/category",
+  "status": "active"
+}
+```
 
 To make use of Layouts for custom markdown use the code sample below. Replace the `widget_uuid` with your own.
 
 Make note of the `placement_uuid` for use in Layouts later.
 
-{'method': 'post', 'body': '{\n  "widget_uuid": "{your-widget-uuid}",\n  "entity_id": "{your-category-id}",\n  "template_file": "pages/category",\n  "status": "active"\n}', 'url': 'https://api.bigcommerce.com/stores/{store_hash}/v3/content/placements', 'headers': {'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Auth-Client': '{$$.env.X-Auth-Client}', 'X-Auth-Token': '{$$.env.X-Auth-Token}'}}
+**Example Create a Placement With a Layout**  
+`/POST https://api.bigcommerce.com/stores/{{store_hash}}/v3/content/placements`
 
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Response</div>
-    </div><div class="HubBlock-header-subtitle">Create Placement</div>
-</div>
+```json
+
+{
+  "widget_uuid": "{your-widget-uuid}",
+  "entity_id": "{your-category-id}",
+  "template_file": "pages/category",
+  "status": "active"
+}
+
+```
 
 <!--
 title: "Sample Response"
 subtitle: "Create Placement"
 lineNumbers: true
 -->
+
+**Example Response Create Placement**  
+`/POST https://api.bigcommerce.com/stores/{{store_hash}}/v3/content/placements`
 
 ```json
 {
@@ -337,13 +364,17 @@ A Layout accepts any html. Using a layout can allow you to create complicated wi
 
 The markup in the sample requst body adds the style of opacity to each image on hover.
 
-{'method': 'post', 'body': '{\n  "entity_id": "{your-category-id}",\n  "region": "category_header_banner",\n  "template_file": "pages/category",\n  "markup": "<style>img:hover{opacity: 0.3;}</style><div><div style=\'padding:5px margin-bottom:40px;\'><bc-placement id=\'bb34b23b-0d4b-4b9b-9e24-c8b0dcfd5e08\'></bc-placement></div></div>"\n}', 'url': 'https://api.bigcommerce.com/stores/{store_hash}/v3/content/layouts', 'headers': {'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Auth-Client': '{$$.env.X-Auth-Client}', 'X-Auth-Token': '{$$.env.X-Auth-Token}'}}
+**Example Create a Layout**  
+`/POST https://api.bigcommerce.com/stores/{{store_hash}}/v3/content/layouts`
 
-<div class="HubBlock-header">
-    <div class="HubBlock-header-title flex items-center">
-        <div class="HubBlock-header-name">Sample Response</div>
-    </div><div class="HubBlock-header-subtitle">Create Layout</div>
-</div>
+```json
+{
+  "entity_id": "{your-category-id}",
+  "region": "category_header_banner",
+  "template_file": "pages/category",
+  "markup": "<style>img:hover{opacity: 0.3;}</style><div><div style='padding:5px margin-bottom:40px;'><bc-placement id='bb34b23b-0d4b-4b9b-9e24-c8b0dcfd5e08'></bc-placement></div></div>"
+}
+```
 
 <!--
 title: "Sample Response"
@@ -351,7 +382,10 @@ subtitle: "Create Layout"
 lineNumbers: true
 -->
 
-```
+**Example Response Create a Layout**  
+`/POST https://api.bigcommerce.com/stores/{{store_hash}}/v3/content/layouts`
+
+```json
 {
     "data": {
         "uuid": "cacdadcf-07ec-43f3-aec4-f8e3382d7618",
@@ -394,12 +428,5 @@ To reuse the Widget Template:
 
 ### Related Articles
 * [Widgets Overview](/api-docs/storefront/widgets/widgets-overview)
-
----
-
-<a href='#widget-tutorial_next-steps' aria-hidden='true' class='block-anchor'  id='widget-tutorial_next-steps'><i aria-hidden='true' class='linkify icon'></i></a>
-
-
-### Next Steps
 * [Wigets Code Samples](/api-docs/storefront/widgets/widgets-code-samples)
 
